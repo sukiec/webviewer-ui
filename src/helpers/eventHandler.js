@@ -31,6 +31,7 @@ export default store => {
   const onHistoryChanged = eventListeners.onHistoryChanged(dispatch, store);
   const onWidgetEditingStarted = eventListeners.onWidgetEditingStarted(dispatch);
   const onWidgetEditingEnded = eventListeners.onWidgetEditingEnded(dispatch);
+  const onAnnotationsLoaded = eventListeners.onAnnotationsLoaded(dispatch);
 
   return {
     addEventHandlers: () => {
@@ -53,6 +54,7 @@ export default store => {
       core.addEventListener('fileAttachmentDataAvailable', onFileAttachmentDataAvailable);
       core.addEventListener('editingStarted', onWidgetEditingStarted);
       core.addEventListener('editingEnded', onWidgetEditingEnded);
+      core.addEventListener('annotationsLoaded', onAnnotationsLoaded);
       core.getTool('AnnotationCreateStamp').on('annotationAdded', onStampAnnotationAdded);
       core.getTool('AnnotationCreateSticky').on('annotationAdded', onStickyAnnotationAdded);
       core.getTool('AnnotationCreateSticky2').on('annotationAdded', onStickyAnnotationAdded);
@@ -88,6 +90,7 @@ export default store => {
       core.removeEventListener('fileAttachmentDataAvailable', onFileAttachmentDataAvailable);
       core.removeEventListener('editingStarted', onWidgetEditingStarted);
       core.removeEventListener('editingEnded', onWidgetEditingEnded);
+      core.removeEventListener('annotationsLoaded', onAnnotationsLoaded);
       core.getTool('AnnotationCreateStamp').off('annotationAdded', onStampAnnotationAdded);
       core.getTool('AnnotationCreateSticky').off('annotationAdded', onStickyAnnotationAdded);
       core.getTool('AnnotationCreateSticky2').off('annotationAdded', onStickyAnnotationAdded);
