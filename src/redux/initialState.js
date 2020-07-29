@@ -54,8 +54,8 @@ export default {
           title: 'action.exitEditWidget',
           label: 'Exit Widgets Editing Mode',
           onClick: () => {
-            const annotManager = core.getAnnotationManager();
-            annotManager.endWidgetsEditing();
+            const widgetEditingManager = core.getAnnotationManager().getWidgetEditingManager();
+            widgetEditingManager.endEditing();
           },
         },
         {
@@ -263,8 +263,8 @@ export default {
           title: 'action.editWidget',
           label: 'W',
           onClick: () => {
-            const annotManager = core.getAnnotationManager();
-            annotManager.startWidgetsEditing();
+            const widgetEditingManager = core.getAnnotationManager().getWidgetEditingManager();
+            widgetEditingManager.startEditing();
           },
         },
         { type: 'toolGroupButton', toolGroup: 'cropTools', dataElement: 'cropToolGroupButton', title: 'annotation.crop' },
