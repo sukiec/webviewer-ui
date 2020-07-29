@@ -1,5 +1,11 @@
 .Header .HeaderItems [data-element=endWidgetEditingButton] {
-  margin: auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0px;
+  top: 0px; // hack for ie11. centers vertically.
+  bottom: 0px; // hack for ie11. centers vertically.
+  margin: auto; // hack for ie11. centers vertically.
   width: auto;
   padding: 0px 5px;
   border: 1px solid var(--border);

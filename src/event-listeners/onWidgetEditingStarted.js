@@ -7,7 +7,7 @@ export default dispatch => () => {
   core.setToolMode(defaultTool);
   dispatch(actions.closeElements(['notesPanel']));
   dispatch(actions.setToolbarGroup('toolbarGroup-View'));
-  dispatch(actions.disableElements(['customRibbonsContainer'], PRIORITY_ONE));
+  dispatch(actions.disableElements(['ribbons'], PRIORITY_ONE));
   dispatch(actions.enableElements(['endWidgetEditingButton'], PRIORITY_ONE));
   dispatch(actions.setCustomElementOverrides('toggleNotesButton', { disabled: true }));
   dispatch(actions.setCustomElementOverrides('printButton', { disabled: true }));
