@@ -23,8 +23,8 @@ import onPageComplete from './onPageComplete';
 import onFileAttachmentDataAvailable from './onFileAttachmentDataAvailable';
 import onSignatureSaved from './onSignatureSaved';
 import onSignatureDeleted from './onSignatureDeleted';
-import onBeginWidgetEditing from './onBeginWidgetEditing';
-import onFinishedWidgetEditing from './onFinishedWidgetEditing';
+import onWidgetEditingStarted from './onWidgetEditingStarted';
+import onWidgetEditingEnded from './onWidgetEditingEnded';
 
 export {
   onSignatureSaved,
@@ -52,6 +52,6 @@ export {
   onPageComplete,
   onFileAttachmentAnnotationAdded,
   onFileAttachmentDataAvailable,
-  onBeginWidgetEditing,
-  onFinishedWidgetEditing
+  onWidgetEditingStarted,
+  onWidgetEditingEnded,
 };
