@@ -46,6 +46,7 @@ const AnnotationPopup = () => {
   const [firstAnnotation, setFirstAnnotation] = useState(null);
   const [canModify, setCanModify] = useState(false);
   const [isStylePopupOpen, setIsStylePopupOpen] = useState(false);
+  const [isEditingWidgets, setIsEditingWidgets] = useState(false);
   const popupRef = useRef();
 
   useOnClickOutside(popupRef, e => {
@@ -144,6 +145,22 @@ const AnnotationPopup = () => {
     };
   }, [dispatch, isLeftPanelOpen, isRightPanelOpen]);
 
+  useEffect(() => {
+    const onWidgetEditingStarted = () => {
+      setIsEditingWidgets(true);
+    };
+    const onWidgetEditingEnded = () => {
+      setIsEditingWidgets(false);
+    };
+
+    core.addEventListener('editingStarted', onWidgetEditingStarted);
+    core.addEventListener('editingEnded', onWidgetEditingEnded);
+    return () => {
+      core.removeEventListener('editingStarted', onWidgetEditingStarted);
+      core.removeEventListener('editingEnded', onWidgetEditingEnded);
+    };
+  }, []);
+
   if (isDisabled || !firstAnnotation) {
     return null;
   }
@@ -180,159 +197,149 @@ const AnnotationPopup = () => {
     core.getAnnotationManager().trigger('annotationDoubleClicked', annot);
   };
 
-  const annotationPopup = <div
-    className={classNames({
-      Popup: true,
-      AnnotationPopup: true,
-      open: isOpen,
-      closed: !isOpen,
-      stylePopupOpen: isStylePopupOpen,
-    })}
-    ref={popupRef}
-    data-element="annotationPopup"
-    style={{ ...position }}
-  >
-    {isStylePopupOpen ? (
-      <AnnotationStylePopup
-        annotation={firstAnnotation}
-        style={style}
-        isOpen={isOpen}
-      />
-    ) : (
-      <CustomizablePopup dataElement="annotationPopup">
-        {!isNotesPanelDisabled &&
-          !multipleAnnotationsSelected &&
-          firstAnnotation.ToolName !== 'CropPage' && (
-          <ActionButton
-            dataElement="annotationCommentButton"
-            title="action.comment"
-            img="icon-header-chat-line"
-            onClick={commentOnAnnotation}
-          />
-        )}
-        {canModify &&
-          hasStyle &&
-          !isAnnotationStylePopupDisabled &&
-          (!multipleAnnotationsSelected || canUngroup) &&
-          firstAnnotation.ToolName !== 'CropPage' && (
-          <ActionButton
-            dataElement="annotationStyleEditButton"
-            title="action.style"
-            img="icon-menu-style-line"
-            onClick={() => setIsStylePopupOpen(true)}
-          />
-        )}
-        {firstAnnotation.ToolName === 'CropPage' && (
-          <ActionButton
-            dataElement="annotationCropButton"
-            title="action.apply"
-            img="ic_check_black_24px"
-            onClick={() => {
-              core.getTool('CropPage').applyCrop();
-              dispatch(actions.closeElement('annotationPopup'));
-            }}
-          />
-        )}
-        {redactionEnabled && !multipleAnnotationsSelected && (
-          <ActionButton
-            dataElement="annotationRedactButton"
-            title="action.apply"
-            img="ic_check_black_24px"
-            onClick={() => {
-              dispatch(applyRedactions(firstAnnotation));
-              dispatch(actions.closeElement('annotationPopup'));
-            }}
-          />
-        )}
-        {canGroup && (
-          <ActionButton
-            dataElement="annotationGroupButton"
-            title="action.group"
-            img="ic_group_24px"
-            onClick={() => core.groupAnnotations(primaryAnnotation, selectedAnnotations)}
-          />
-        )}
-        {canUngroup && (
-          <ActionButton
-            dataElement="annotationUngroupButton"
-            title="action.ungroup"
-            img="ic_ungroup_24px"
-            onClick={() => core.ungroupAnnotations(selectedAnnotations)}
-          />
-        )}
-        {canModify && (
-          <ActionButton
-            dataElement="annotationDeleteButton"
-            title="action.delete"
-            img="icon-delete-line"
-            onClick={() => {
-              core.deleteAnnotations(core.getSelectedAnnotations());
-              dispatch(actions.closeElement('annotationPopup'));
-            }}
-          />
-        )}
-        {canModify &&
-          firstAnnotation.Measure &&
-          firstAnnotation instanceof Annotations.LineAnnotation && (
-          <ActionButton
-            dataElement="calibrateButton"
-            title="action.calibrate"
-            img="calibrate"
-            onClick={() => {
-              dispatch(actions.closeElement('annotationPopup'));
-              dispatch(actions.openElement('calibrationModal'));
-            }}
-          />
-        )}
-        {!([
-          'CropPage',
-          'AnnotationCreateSignature',
-          'AnnotationCreateRedaction',
-          'AnnotationCreateSticky'
-        ].includes(firstAnnotation.ToolName)) && (
-          <ActionButton
-            title="tool.Link"
-            img={firstAnnotation.getAssociatedLinks().length > 0 ? 'icon-tool-unlink' : 'icon-tool-link'}
-            onClick={
-              firstAnnotation.getAssociatedLinks().length > 0
-                ? () => {
-                  const annotManager = core.getAnnotationManager();
-                  selectedAnnotations.forEach(annot => {
-                    annot.getAssociatedLinks().forEach(annotId => {
-                      const linkAnnot = annotManager.getAnnotationById(annotId);
-                      annotManager.deleteAnnotation(linkAnnot, null, true);
+  const annotationPopup = (
+    <div
+      className={classNames({
+        Popup: true,
+        AnnotationPopup: true,
+        open: isOpen,
+        closed: !isOpen,
+        stylePopupOpen: isStylePopupOpen,
+      })}
+      ref={popupRef}
+      data-element="annotationPopup"
+      style={{ ...position }}
+    >
+      {isStylePopupOpen ? (
+        <AnnotationStylePopup annotation={firstAnnotation} style={style} isOpen={isOpen} />
+      ) : (
+        <CustomizablePopup dataElement="annotationPopup">
+          {!isEditingWidgets && !isNotesPanelDisabled && !multipleAnnotationsSelected && firstAnnotation.ToolName !== 'CropPage' && (
+            <ActionButton
+              dataElement="annotationCommentButton"
+              title="action.comment"
+              img="icon-header-chat-line"
+              onClick={commentOnAnnotation}
+            />
+          )}
+          {canModify &&
+            hasStyle &&
+            !isEditingWidgets &&
+            !isAnnotationStylePopupDisabled &&
+            (!multipleAnnotationsSelected || canUngroup) &&
+            firstAnnotation.ToolName !== 'CropPage' && (
+            <ActionButton
+              dataElement="annotationStyleEditButton"
+              title="action.style"
+              img="icon-menu-style-line"
+              onClick={() => setIsStylePopupOpen(true)}
+            />
+          )}
+          {firstAnnotation.ToolName === 'CropPage' && (
+            <ActionButton
+              dataElement="annotationCropButton"
+              title="action.apply"
+              img="ic_check_black_24px"
+              onClick={() => {
+                core.getTool('CropPage').applyCrop();
+                dispatch(actions.closeElement('annotationPopup'));
+              }}
+            />
+          )}
+          {!isEditingWidgets && redactionEnabled && !multipleAnnotationsSelected && (
+            <ActionButton
+              dataElement="annotationRedactButton"
+              title="action.apply"
+              img="ic_check_black_24px"
+              onClick={() => {
+                dispatch(applyRedactions(firstAnnotation));
+                dispatch(actions.closeElement('annotationPopup'));
+              }}
+            />
+          )}
+          {!isEditingWidgets && canGroup && (
+            <ActionButton
+              dataElement="annotationGroupButton"
+              title="action.group"
+              img="ic_group_24px"
+              onClick={() => core.groupAnnotations(primaryAnnotation, selectedAnnotations)}
+            />
+          )}
+          {!isEditingWidgets && canUngroup && (
+            <ActionButton
+              dataElement="annotationUngroupButton"
+              title="action.ungroup"
+              img="ic_ungroup_24px"
+              onClick={() => core.ungroupAnnotations(selectedAnnotations)}
+            />
+          )}
+          {canModify && (
+            <ActionButton
+              dataElement="annotationDeleteButton"
+              title="action.delete"
+              img="icon-delete-line"
+              onClick={() => {
+                core.deleteAnnotations(core.getSelectedAnnotations());
+                dispatch(actions.closeElement('annotationPopup'));
+              }}
+            />
+          )}
+          {canModify && firstAnnotation.Measure && firstAnnotation instanceof Annotations.LineAnnotation && (
+            <ActionButton
+              dataElement="calibrateButton"
+              title="action.calibrate"
+              img="calibrate"
+              onClick={() => {
+                dispatch(actions.closeElement('annotationPopup'));
+                dispatch(actions.openElement('calibrationModal'));
+              }}
+            />
+          )}
+          {!['CropPage', 'AnnotationCreateSignature', 'AnnotationCreateRedaction', 'AnnotationCreateSticky'].includes(
+            firstAnnotation.ToolName,
+          ) && !isEditingWidgets && (
+            <ActionButton
+              title="tool.Link"
+              img={firstAnnotation.getAssociatedLinks().length > 0 ? 'icon-tool-unlink' : 'icon-tool-link'}
+              onClick={
+                firstAnnotation.getAssociatedLinks().length > 0
+                  ? () => {
+                    const annotManager = core.getAnnotationManager();
+                    selectedAnnotations.forEach(annot => {
+                      annot.getAssociatedLinks().forEach(annotId => {
+                        const linkAnnot = annotManager.getAnnotationById(annotId);
+                        annotManager.deleteAnnotation(linkAnnot, null, true);
+                      });
+                      annot.unassociateLinks();
+                      if (annot instanceof Annotations.TextHighlightAnnotation && annot.Opacity === 0) {
+                        annotManager.deleteAnnotation(annot);
+                      }
                     });
-                    annot.unassociateLinks();
-                    if (annot instanceof Annotations.TextHighlightAnnotation && annot.Opacity === 0) {
-                      annotManager.deleteAnnotation(annot);
-                    }
-                  });
-                }
-                : () => dispatch(actions.openElement('linkModal'))
-            }
-            dataElement="linkButton"
-          />
-        )}
-        {
-          firstAnnotation instanceof window.Annotations.FileAttachmentAnnotation &&
-          (<ActionButton
-            title="action.fileAttachmentDownload"
-            img="icon-download"
-            onClick={() => downloadFileAttachment(firstAnnotation)}
-            dataElement="fileAttachmentDownload"
-          />)
-        }
-      </CustomizablePopup>
-    )}
-  </div>;
-
+                  }
+                  : () => dispatch(actions.openElement('linkModal'))
+              }
+              dataElement="linkButton"
+            />
+          )}
+          {firstAnnotation instanceof window.Annotations.FileAttachmentAnnotation && (
+            <ActionButton
+              title="action.fileAttachmentDownload"
+              img="icon-download"
+              onClick={() => downloadFileAttachment(firstAnnotation)}
+              dataElement="fileAttachmentDownload"
+            />
+          )}
+        </CustomizablePopup>
+      )}
+    </div>
+  );
   return (
     isIE || isMobile() ?
-    annotationPopup
-    :
-    <Draggable cancel=".Button, .cell, .sliders-container svg">
-      {annotationPopup}
-    </Draggable>
+      annotationPopup
+      :
+      <Draggable cancel=".Button, .cell, .sliders-container svg">
+        {annotationPopup}
+      </Draggable>
   );
 };
 

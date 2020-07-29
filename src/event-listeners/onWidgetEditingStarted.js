@@ -5,6 +5,7 @@ import defaultTool from 'constants/defaultTool';
 
 export default dispatch => () => {
   core.setToolMode(defaultTool);
+  dispatch(actions.closeElements(['notesPanel']));
   dispatch(actions.setToolbarGroup('toolbarGroup-View'));
   dispatch(actions.disableElements(['customRibbonsContainer'], PRIORITY_ONE));
   dispatch(actions.enableElements(['endWidgetEditingButton'], PRIORITY_ONE));
