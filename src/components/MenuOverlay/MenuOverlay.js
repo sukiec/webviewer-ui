@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import selectors from 'selectors';
 import FlyoutMenu from '../FlyoutMenu/FlyoutMenu';
+import ActionButton from 'components/ActionButton';
 import './MenuOverlay.scss';
 
 function MenuOverlay() {
@@ -49,54 +50,47 @@ function MenuOverlay() {
 
   return (
     <FlyoutMenu menu="menuOverlay" trigger="menuButton" onClose={undefined}>
-      {!isFilePickerButtonDisabled && (
-        <DataElementWrapper className="row" dataElement="filePickerButton">
-          <button className="MenuItem" onClick={openFilePicker} aria-label={t('action.openFile')}>
-            <Icon className="MenuIcon" glyph="icon-header-file-picker-line" />
-            <div className="MenuLabel">{t('action.openFile')}</div>
-          </button>
-        </DataElementWrapper>
-      )}
+      <ActionButton
+        dataElement="filePickerButton"
+        className="row"
+        img="icon-header-file-picker-line"
+        label={t('action.openFile')}
+        onClick={openFilePicker}
+      />
       {!isIOS && (
-        <DataElementWrapper className="row" dataElement="fullscreenButton">
-          <button
-            className="MenuItem"
-            onClick={toggleFullscreen}
-            aria-label={isFullScreen ? t('action.exitFullscreen') : t('action.enterFullscreen')}
-          >
-            <Icon
-              className="MenuIcon"
-              glyph={isFullScreen ? 'icon-header-full-screen-exit' : 'icon-header-full-screen'}
-            />
-            <div className="MenuLabel">{isFullScreen ? t('action.exitFullscreen') : t('action.enterFullscreen')}</div>
-          </button>
-        </DataElementWrapper>
+        <ActionButton
+          dataElement="fullscreenButton"
+          className="row"
+          img={isFullScreen ? 'icon-header-full-screen-exit' : 'icon-header-full-screen'}
+          label={isFullScreen ? t('action.exitFullscreen') : t('action.enterFullscreen')}
+          onClick={toggleFullscreen}
+        />
       )}
       {documentType !== workerTypes.XOD && (
-        <DataElementWrapper className="row" dataElement="downloadButton">
-          <button className="MenuItem" onClick={downloadDocument} aria-label={t('action.download')}>
-            <Icon className="MenuIcon" glyph="icon-header-download" />
-            <div className="MenuLabel">{t('action.download')}</div>
-          </button>
-        </DataElementWrapper>
+        <ActionButton
+          dataElement="downloadButton"
+          className="row"
+          img="icon-header-download"
+          label={t('action.download')}
+          onClick={downloadDocument}
+        />
       )}
-      <DataElementWrapper className="row" dataElement="printButton">
-        <button className="MenuItem" onClick={handlePrintButtonClick} aria-label={t('action.print')}>
-          <Icon className="MenuIcon" glyph="icon-header-print-line" />
-          <div className="MenuLabel">{t('action.print')}</div>
-        </button>
-      </DataElementWrapper>
+      <ActionButton
+        dataElement="printButton"
+        className="row"
+        img="icon-header-print-line"
+        label={t('action.print')}
+        onClick={handlePrintButtonClick}
+      />
       {!isIE && (
-        <DataElementWrapper className="row" dataElement="themeChangeButton">
-          <button
-            className="MenuItem"
-            onClick={activeTheme === 'dark' ? setActiveLightTheme : setActiveDarkTheme}
-            aria-label={activeTheme === 'dark' ? t('action.lightMode') : t('action.darkMode')}
-          >
-            <Icon className="MenuIcon" glyph={`icon - header - mode - ${activeTheme === 'dark' ? 'day' : 'night'}`} />
-            <div className="MenuLabel">{activeTheme === 'dark' ? t('action.lightMode') : t('action.darkMode')}</div>
-          </button>
-        </DataElementWrapper>)}
+        <ActionButton
+          dataElement="themeChangeButton"
+          className="row"
+          img={`icon - header - mode - ${activeTheme === 'dark' ? 'day' : 'night'}`}
+          label={activeTheme === 'dark' ? t('action.lightMode') : t('action.darkMode')}
+          onClick={activeTheme === 'dark' ? setActiveLightTheme : setActiveDarkTheme}
+        />)
+      }
     </FlyoutMenu>
   );
 }

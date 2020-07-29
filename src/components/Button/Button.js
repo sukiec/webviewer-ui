@@ -51,7 +51,7 @@ const Button = props => {
   } = { ...props, ...customOverrides };
   const [t] = useTranslation();
 
-  const aLabel = ariaLabel || title ? t(title) : undefined;
+  const aLabel = ariaLabel || label || (title ? t(title) : undefined);
 
   const shortcutKey = title ? title.slice(title.indexOf('.') + 1) : undefined;
   const ariaKeyshortcuts = shortcutKey ? shortcutAria(shortcutKey) : undefined;
@@ -61,8 +61,7 @@ const Button = props => {
   const imgToShow = img;
 
   // if there is no file extension then assume that this is a glyph
-  const isGlyph =
-    img && !isBase64 && (!img.includes('.') || img.startsWith('<svg'));
+  const isGlyph = img && !isBase64 && (!img.includes('.') || img.startsWith('<svg'));
   const shouldRenderTooltip = !!title && !disabled;
   const children = (
     <button
@@ -82,12 +81,14 @@ const Button = props => {
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
       {imgToShow && !isGlyph && <img src={imgToShow} />}
-      {label && label}
+      {label && <span>{label}</span>}
     </button>
   );
 
   return removeElement ? null : shouldRenderTooltip ? (
-    <Tooltip content={title} hideShortcut={disabled}>{children}</Tooltip>
+    <Tooltip content={title} hideShortcut={disabled}>
+      {children}
+    </Tooltip>
   ) : (
     children
   );
