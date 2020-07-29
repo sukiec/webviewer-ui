@@ -2,6 +2,8 @@ import { connect } from 'react-redux';
 
 import Button from 'components/Button';
 
+import './ActionButton.scss';
+
 const mapStateToProps = (state, { isNotClickableSelector }) => ({
   className: 'ActionButton',
   disabled: isNotClickableSelector && isNotClickableSelector(state),
