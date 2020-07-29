@@ -51,8 +51,7 @@ export default {
         {
           type: 'actionButton',
           dataElement: 'endWidgetEditingButton',
-          title: 'action.exitEditWidget',
-          label: 'Exit Widgets Editing Mode',
+          label: 'action.exitWidgetEditing',
           onClick: () => {
             const widgetEditingManager = core.getAnnotationManager().getWidgetEditingManager();
             widgetEditingManager.endEditing();
@@ -260,7 +259,7 @@ export default {
         {
           type: 'actionButton',
           dataElement: 'startWidgetEditingButton',
-          title: 'action.editWidget',
+          title: 'action.startWidgetEditing',
           label: 'W',
           onClick: () => {
             const widgetEditingManager = core.getAnnotationManager().getWidgetEditingManager();

@@ -51,7 +51,7 @@ const Button = props => {
   } = { ...props, ...customOverrides };
   const [t] = useTranslation();
 
-  const aLabel = ariaLabel || label || (title ? t(title) : undefined);
+  const aLabel = ariaLabel || (label ? t(label) : undefined) || (title ? t(title) : undefined);
 
   const shortcutKey = title ? title.slice(title.indexOf('.') + 1) : undefined;
   const ariaKeyshortcuts = shortcutKey ? shortcutAria(shortcutKey) : undefined;
@@ -81,7 +81,7 @@ const Button = props => {
     >
       {isGlyph && <Icon glyph={imgToShow} color={color} />}
       {imgToShow && !isGlyph && <img src={imgToShow} />}
-      {label && <span>{label}</span>}
+      {label && <span>{t(label)}</span>}
     </button>
   );
 

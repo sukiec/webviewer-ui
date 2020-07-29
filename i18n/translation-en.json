@@ -18,6 +18,8 @@
     "extract": "Extract",
     "enterFullscreen": "Full screen",
     "exitFullscreen": "Exit full screen",
+    "startWidgetEditing": "Start widget editing",
+    "exitWidgetEditing": "Exit widget editing mode",
     "fit": "Fit",
     "fitToPage": "Fit to page",
     "fitToWidth": "Fit to width",
