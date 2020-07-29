@@ -54,7 +54,8 @@
     "prevResult": "Previous result",
     "nextResult": "Next result",
     "prev": "Previous",
-    "next": "Next"
+    "next": "Next",
+    "editWidgets": "Edit Widgets"
   },
   "annotation": {
     "areaMeasurement": "Area",

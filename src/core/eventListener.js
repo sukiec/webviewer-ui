@@ -16,6 +16,7 @@ const getEventToObjectMap = () => {
   const annotManager = window.docViewer.getAnnotationManager();
   const historyManager = window.docViewer.getAnnotationHistoryManager();
   const editBoxManager = annotManager.getEditBoxManager();
+  const widgetEditingManager = annotManager.getWidgetEditingManager();
 
   return {
     signatureSaved: window.docViewer,
@@ -65,6 +66,8 @@ const getEventToObjectMap = () => {
     notify: annotManager,
     setNoteText: annotManager,
     fileAttachmentDataAvailable: annotManager,
+    beginEditing: widgetEditingManager,
+    finishedEditing: widgetEditingManager,
     editorFocus: editBoxManager,
     editorBlur: editBoxManager,
     editorTextChanged: editBoxManager,

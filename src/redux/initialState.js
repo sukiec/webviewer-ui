@@ -49,6 +49,16 @@ export default {
         { type: 'toolButton', toolName: 'TextSelect' },
         { type: 'toolButton', toolName: 'AnnotationEdit', hidden: ['small-mobile', 'mobile'] },
         {
+          type: 'actionButton',
+          dataElement: 'endWidgetEditingButton',
+          title: 'action.exitEditWidget',
+          label: 'Exit Widgets Editing Mode',
+          onClick: () => {
+            const annotManager = core.getAnnotationManager();
+            annotManager.endWidgetsEditing();
+          },
+        },
+        {
           type: 'customElement',
           render: () => <Ribbons />,
           className: 'custom-ribbons-container',
@@ -246,6 +256,16 @@ export default {
       ],
       "toolbarGroup-Edit": [
         { type: 'spacer' },
+        {
+          type: 'actionButton',
+          dataElement: 'startWidgetEditingButton',
+          title: 'action.editWidget',
+          label: 'W',
+          onClick: () => {
+            const annotManager = core.getAnnotationManager();
+            annotManager.startWidgetsEditing();
+          },
+        },
         { type: 'toolGroupButton', toolGroup: 'cropTools', dataElement: 'cropToolGroupButton', title: 'annotation.crop' },
         { type: 'toolGroupButton', toolGroup: 'redactionTools', dataElement: 'redactionToolGroupButton', title: 'annotation.redact', showColor: 'never' },
         { type: 'divider' },

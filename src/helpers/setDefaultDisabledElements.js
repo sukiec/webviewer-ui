@@ -78,6 +78,7 @@ export default store => {
         'bookmarksPanel',
         'bookmarksPanelButton',
         'wildCardSearchOption',
+        'endWidgetEditingButton',
       ],
       PRIORITY_ONE,
     ),
