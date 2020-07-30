@@ -332,6 +332,7 @@ class PrintModal extends React.PureComponent {
 
       const header = document.createElement('div');
       header.className = 'page__header';
+      header.style.fontSize = '12pt';
       header.innerHTML = `Page ${pageNumber}`;
 
       container.appendChild(header);
@@ -410,8 +411,6 @@ class PrintModal extends React.PureComponent {
     info.className = 'note__info';
     info.innerHTML = `
       Author: ${core.getDisplayAuthor(annotation) || ''} &nbsp;&nbsp;
-      Subject: ${annotation.Subject} &nbsp;&nbsp;
-      Date: ${dayjs(annotation.DateCreated).format('D/MM/YYYY h:mm:ss A')}
     `;
     return info;
   };
