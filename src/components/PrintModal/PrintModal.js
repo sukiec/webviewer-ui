@@ -55,6 +55,7 @@ class PrintModal extends React.PureComponent {
       isWatermarkModalVisible: false,
       watermarkModalOption: null,
       existingWatermarks: null,
+      includeComments: true,
       includeAnnotations: true
     };
   }
@@ -478,7 +479,7 @@ class PrintModal extends React.PureComponent {
       return null;
     }
 
-    const { count, pagesToPrint, includeAnnotations } = this.state;
+    const { count, pagesToPrint, includeComments, includeAnnotations } = this.state;
     const isPrinting = count >= 0;
     const className = getClassName('Modal PrintModal', this.props);
     const customPagesLabelElement = (
@@ -564,6 +565,8 @@ class PrintModal extends React.PureComponent {
                       name="comments"
                       label={t('option.print.includeComments')}
                       disabled={isPrinting}
+                      onChange = {() => this.setState(state => ({ includeComments: !state.includeComments }))}
+                      checked = {includeComments}
                       center
                     />
                     <Choice
